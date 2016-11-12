@@ -1,33 +1,64 @@
 <html>
 <head>
 	<style>
-		.center{
-			background-color: lightblue;
+		<% if victory %>
+			body{
+				background: -webkit-linear-gradient(-90deg, rgba(248,252,10,1) 0, rgba(248,252,10,1) 3%, rgba(219,167,118,1) 26%, rgba(58,132,195,1) 57%, rgba(10,16,91,1) 100%);
+  			background: -moz-linear-gradient(180deg, rgba(248,252,10,1) 0, rgba(248,252,10,1) 3%, rgba(219,167,118,1) 26%, rgba(58,132,195,1) 57%, rgba(10,16,91,1) 100%);
+  			background: linear-gradient(180deg, rgba(248,252,10,1) 0, rgba(248,252,10,1) 3%, rgba(219,167,118,1) 26%, rgba(58,132,195,1) 57%, rgba(10,16,91,1) 100%);
+			}
+		<% else %>
+			body{
+				background-color: black;
+				background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px), radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px), radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+				background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px; 
+				background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+			}			
+		<% end %>
+
+		#victory-notification{
+				background: yellow;
+				height: 50px;				
+				padding: 0 25% 0 25%;
+				margin: 0 0 5px 0;
+			}
+		
+		.center{			
 			margin: 15px auto;
 	  	width: 400px;
 	  	height: 700px;
-	  	border: 5px solid green;
-	  	padding: 10px;	  		  	
+	  	border: 5px solid #000066;
+	  	padding: 10px;
+	  	background-color: #6d695c;
+			background-image: repeating-linear-gradient(120deg, rgba(255,255,255,.1), rgba(255,255,255,.1) 1px, transparent 1px, transparent 60px), repeating-linear-gradient(60deg, rgba(255,255,255,.1), rgba(255,255,255,.1) 1px, transparent 1px, transparent 60px), linear-gradient(60deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1)), linear-gradient(120deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1));
+			background-size: 70px 120px; 		  	
 		}
 		.circle{
-			width: 50px;
-			height: 50px;
+			width: 40px;
+			height: 40px;
 			background: grey;
 			-moz-border-radius: 50%;
 			-webkit-border-radius: 50%;
 			border-radius: 50%;
-			margin: 1px auto 1px auto;
+			margin: 5px auto 5px auto;
 			
 		}
 		.oval{
 			width: 200px;
 			height: 50px;
-			background: yellow;
 			display: table;
 			-moz-border-radius: 100px / 25px;
 			-webkit-border-radius: 100px / 25px;
 			border-radius: 100px / 25px;			
 			margin: 3px auto 4px auto;
+			color: rgba(0,0,0,0.9);
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  background: -webkit-linear-gradient(-90deg, rgba(252,234,187,1) 0, rgba(252,205,77,1) 50%, rgba(248,181,0,1) 51%, rgba(251,223,147,1) 100%);
+  background: -moz-linear-gradient(180deg, rgba(252,234,187,1) 0, rgba(252,205,77,1) 50%, rgba(248,181,0,1) 51%, rgba(251,223,147,1) 100%);
+  background: linear-gradient(180deg, rgba(252,234,187,1) 0, rgba(252,205,77,1) 50%, rgba(248,181,0,1) 51%, rgba(251,223,147,1) 100%);
+  background-position: 50% 50%;   
+   /*box-shadow: 0 0 7px 4px rgba(249,241,7,0.83) ;*/
 		}
 		.oval span{
 			display: table-cell;
@@ -52,7 +83,7 @@
 		}
 		.table-cell{
 			display: table-cell;      
-      border:#f0f0f0 1px solid;
+      /*border:#f0f0f0 1px solid;*/
       vertical-align: middle;
 		}
 		/*result table*/
@@ -87,23 +118,27 @@
 			<% 4.times do |j|  %>
 			<% nth_circle = %q{first second third fourth}.split %>
 				<%= "#table-row-#{i + 1} .#{nth_circle[j]}{" %>
-				<%= "background: #{board[i][0][j]};" %>
+				<%= "background: #{board[i][0][j]};" %>				
 				<%= "}" %>
 				<% f = 1 %>
 				<% board[i][1][:bulls].times do %>
 					<%= "#table-row-#{i + 1} .feedback-#{f}{" %>
-					<%= "background: green;" %>
+					<%= "background: red;" %>
 					<%= "}" %>
 					<% f += 1 %>
 				<% end %>
 				<% board[i][1][:cows].times do %>
 					<%= "#table-row-#{i + 1} .feedback-#{f}{" %>
-					<%= "background: yellow;" %>
+					<%= "background: white;" %>
 					<%= "}" %>
 					<% f += 1 %>
 				<% end %>
 			<% end %>
 		<% end %>
+
+		#form div{
+			display: inline;
+		}
 
 	</style>	
 
@@ -114,50 +149,19 @@
 
 </head>
 <body>
-	<form name="form_move" method="post" action="/new_move">
-		
-		<div id="normal_text_text">
-			Your guess:<br>
-		</div>
-		<div>
-			<select name="first_colour">
-				<% colours.each do |c| %>
-				<%= "<option value='#{c}' #{board.size > 0 && board.last[0][0] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
-				<% end %>
-			</select>
-		</div>		
-		<div>			
-			<select name="second_colour">
-				<% colours.each do |c| %>
-				<%= "<option value='#{c}' #{board.size > 0 && board.last[0][1] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
-				<% end %>
-			</select>			
-		</div>		
-		<div>			
-			<select name="third_colour">
-				<% colours.each do |c| %>
-				<%= "<option value='#{c}' #{board.size > 0 && board.last[0][2] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
-				<% end %>
-			</select>			
-		</div>		
-		<div>			
-			<select name="fourth_colour">
-				<% colours.each do |c| %>
-				<%= "<option value='#{c}' #{board.size > 0 && board.last[0][3] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
-				<% end %>
-			</select>			
-		</div>		
-		<div>
-			<input type='submit' onclick="return updateBoard();" value='guess' id="guess_button"/>
-		</div>
-	</form>
 
 	<div class="center">
-		<div class="oval">
-			<span>
-				Master
-			</span>								
-		</div>
+		<% if victory %>
+			<div class="oval" id="victory-notification">
+				<p>Master: "Congratulations! You have won! Do you want to start again?"</p>
+			</div>
+		<% else %>
+			<div class="oval">
+				<span>
+					Master
+				</span>								
+			</div>
+		<% end %>
 		<div id="board">
 			<div class="table">			
 				<div class="table-row" id="table-row-12">
@@ -521,9 +525,45 @@
 			    </div>
 				</div>
 			</div>
-						
 		</div>
-		Board
+		<form name="form_move" method="post" action="/new_move">
+		<div id="form">
+			<div id="normal_text_text">
+				Your guess:<br>
+			</div>
+			<div>
+				<select name="first_colour">
+					<% colours.each do |c| %>
+					<%= "<option value='#{c}' #{board.size > 0 && board.last[0][0] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
+					<% end %>
+				</select>
+			</div>		
+			<div>			
+				<select name="second_colour">
+					<% colours.each do |c| %>
+					<%= "<option value='#{c}' #{board.size > 0 && board.last[0][1] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
+					<% end %>
+				</select>			
+			</div>		
+			<div>			
+				<select name="third_colour">
+					<% colours.each do |c| %>
+					<%= "<option value='#{c}' #{board.size > 0 && board.last[0][2] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
+					<% end %>
+				</select>			
+			</div>		
+			<div>			
+				<select name="fourth_colour">
+					<% colours.each do |c| %>
+					<%= "<option value='#{c}' #{board.size > 0 && board.last[0][3] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
+					<% end %>
+				</select>			
+			</div>		
+			<div>
+				<input type='submit' onclick="return updateBoard();" value='guess' id="guess_button"/>
+			</div>
+		</div>
+	</form>	
 	</div>
 
 </body>

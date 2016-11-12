@@ -1,7 +1,7 @@
 class Mastermind
 
 	def self.setup_game(name)
-		colours = %q{red green blue yellow brown black white purple orange}.split
+		colours = %q{crimson green blue yellow chocolate black white purple teal cyan}.split
 		board = Board.new(colours)
 
 		code_breaker = CodeBreaker.new(name)		
@@ -167,8 +167,11 @@ class Mastermind
 		if @board.validate_colours(current_colours)
 			feedback = @code_master.get_feedback(current_colours)
 			@board.update(current_colours, feedback)
-			feedback
 		end
+	end
+
+	def victory?
+		@board.board.size > 0 && @board.board.last[1][:bulls] == 4
 	end
 
 	def print_code

@@ -6,7 +6,7 @@ use Rack::Session::Pool, :expire_after => 2592000
 # enable :sessions
 
 get "/" do
-	# game = session[:game]	
+	# game = session[:game] 
 	# game = Mastermind.setup_game("Pasha") if !game.is_a? Mastermind
 	game = Mastermind.setup_game("Pasha")
 	# guess = [first_colour, second_colour, third_colour, fourth_colour]
@@ -14,14 +14,15 @@ get "/" do
 	board = game.get_board
 	session["game"] = game
 	colours = game.get_colours
-	erb :index, {locals: {board: board, colours: colours}}
+	victory = false
+	erb :index, {locals: {board: board, colours: colours, victory: victory}}
 end
 
 post '/new_move' do
   game = session[:game]
   puts "//////////// in the post //////////////"
 	# puts "code = #{game.print_code}"
-	puts "game = #{game}"
+	puts "game = #{game}" 
 	first_colour = params[:first_colour]
 	second_colour = params[:second_colour]
 	third_colour = params[:third_colour]
@@ -32,9 +33,9 @@ post '/new_move' do
 	guess = [first_colour, second_colour, third_colour, fourth_colour]
 	feedback = game.process_turn(guess)
 	board = game.get_board
-	puts "feedback = #{feedback}"
-	code = game.print_code
+	puts "code = #{game.print_code}"
 	session["game"] = game
+	victory = game.victory?	
 	colours = game.get_colours
-	erb :index, {locals: {feedback: feedback, code: code, board: board, colours: colours}}
+	erb :index, {locals: {board: board, colours: colours, victory: victory}}
 end
