@@ -1,0 +1,530 @@
+<html>
+<head>
+	<style>
+		.center{
+			background-color: lightblue;
+			margin: 15px auto;
+	  	width: 400px;
+	  	height: 700px;
+	  	border: 5px solid green;
+	  	padding: 10px;	  		  	
+		}
+		.circle{
+			width: 50px;
+			height: 50px;
+			background: grey;
+			-moz-border-radius: 50%;
+			-webkit-border-radius: 50%;
+			border-radius: 50%;
+			margin: 1px auto 1px auto;
+			
+		}
+		.oval{
+			width: 200px;
+			height: 50px;
+			background: yellow;
+			display: table;
+			-moz-border-radius: 100px / 25px;
+			-webkit-border-radius: 100px / 25px;
+			border-radius: 100px / 25px;			
+			margin: 3px auto 4px auto;
+		}
+		.oval span{
+			display: table-cell;
+			vertical-align: middle;
+			text-align:center;
+			padding: 0 15px;
+		}
+
+		/*= table*/
+		#board{
+			margin: 0px auto 0px auto;
+		}
+		.table{
+		  display: table;
+		  width: 100%;		  
+		  border-collapse:collapse;		  
+		}
+		.table-row{
+			display: table-row;			 
+			height: 20px;
+			padding: 0px;			
+		}
+		.table-cell{
+			display: table-cell;      
+      border:#f0f0f0 1px solid;
+      vertical-align: middle;
+		}
+		/*result table*/
+		.results{
+			padding: 0;
+		}
+		.table-2{
+		  display: table;
+		  width: 100%;
+		  height: 100%;
+		  border-collapse:collapse;		  
+		}
+		.table-2 .table-row{
+			display: table-row;
+		}
+		.table-2 .table-cell{
+			display: table-cell;
+			background-color: grey;
+			padding: 0;
+			width: 15px;
+			height: 10px;
+      border:#f0f0f0 1px solid;
+		}
+		.numeration{
+			text-align: center;
+		}
+		.action-button{
+			background-color: orange;
+		}
+
+		<% board.each_index do |i| %>
+			<% 4.times do |j|  %>
+			<% nth_circle = %q{first second third fourth}.split %>
+				<%= "#table-row-#{i + 1} .#{nth_circle[j]}{" %>
+				<%= "background: #{board[i][0][j]};" %>
+				<%= "}" %>
+				<% f = 1 %>
+				<% board[i][1][:bulls].times do %>
+					<%= "#table-row-#{i + 1} .feedback-#{f}{" %>
+					<%= "background: green;" %>
+					<%= "}" %>
+					<% f += 1 %>
+				<% end %>
+				<% board[i][1][:cows].times do %>
+					<%= "#table-row-#{i + 1} .feedback-#{f}{" %>
+					<%= "background: yellow;" %>
+					<%= "}" %>
+					<% f += 1 %>
+				<% end %>
+			<% end %>
+		<% end %>
+
+	</style>	
+
+	<script type="text/javascript">
+
+	</script>
+
+
+</head>
+<body>
+	<form name="form_move" method="post" action="/new_move">
+		
+		<div id="normal_text_text">
+			Your guess:<br>
+		</div>
+		<div>
+			<select name="first_colour">
+				<% colours.each do |c| %>
+				<%= "<option value='#{c}' #{board.size > 0 && board.last[0][0] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
+				<% end %>
+			</select>
+		</div>		
+		<div>			
+			<select name="second_colour">
+				<% colours.each do |c| %>
+				<%= "<option value='#{c}' #{board.size > 0 && board.last[0][1] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
+				<% end %>
+			</select>			
+		</div>		
+		<div>			
+			<select name="third_colour">
+				<% colours.each do |c| %>
+				<%= "<option value='#{c}' #{board.size > 0 && board.last[0][2] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
+				<% end %>
+			</select>			
+		</div>		
+		<div>			
+			<select name="fourth_colour">
+				<% colours.each do |c| %>
+				<%= "<option value='#{c}' #{board.size > 0 && board.last[0][3] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
+				<% end %>
+			</select>			
+		</div>		
+		<div>
+			<input type='submit' onclick="return updateBoard();" value='guess' id="guess_button"/>
+		</div>
+	</form>
+
+	<div class="center">
+		<div class="oval">
+			<span>
+				Master
+			</span>								
+		</div>
+		<div id="board">
+			<div class="table">			
+				<div class="table-row" id="table-row-12">
+					<div class="table-cell numeration">12</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-11">
+					<div class="table-cell numeration">11</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-10">
+					<div class="table-cell numeration">10</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-9">
+					<div class="table-cell numeration">9</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-8">
+					<div class="table-cell numeration">8</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-7">
+					<div class="table-cell numeration">7</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-6">
+					<div class="table-cell numeration">6</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-5">
+					<div class="table-cell numeration">5</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-4">
+					<div class="table-cell numeration">4</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-3">
+					<div class="table-cell numeration">3</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-2">
+					<div class="table-cell numeration">2</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+				<div class="table-row" id="table-row-1">
+					<div class="table-cell numeration">1</div>
+				 	<div class="table-cell">				 		
+				 		<div class="circle first"></div>
+				 	</div>
+			    <div class="table-cell">
+			    	<div class="circle second"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle third"></div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle fourth"></div>
+			    </div>
+			    <div class="table-cell results">
+			    	<div class="table-2">
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-1"></div>
+			    			<div class="table-cell feedback-2"></div>
+			    		</div>
+			    		<div class="table-row">
+			    			<div class="table-cell feedback-3"></div>
+			    			<div class="table-cell feedback-4"></div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="table-cell">
+			    	<div class="circle action-button"></div>
+			    </div>
+				</div>
+			</div>
+						
+		</div>
+		Board
+	</div>
+
+</body>
+</html>
