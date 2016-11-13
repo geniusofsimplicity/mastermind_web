@@ -1,7 +1,18 @@
 class Mastermind
 
 	def self.setup_game(name)
-		colours = %q{crimson green blue yellow chocolate black white purple teal cyan}.split
+		# colours = %q{magenta green blue yellow darkorange black white indigo saddlebrown cyan}.split
+		colours = [	"rgb(255, 0, 255)", 	#magenta
+								"rgb(0, 128, 0)", 		#green
+								"rgb(0, 0, 255)",			#blue
+		 						"rgb(255, 255, 0)",		#yellow
+								"rgb(255, 140, 0)",		#orange
+								"rgb(0, 0, 0)",				#black
+								"rgb(255, 255, 255)", #white
+								"rgb(75, 0, 130)", 		#indigo
+								"rgb(139, 69, 19)", 	#brown
+								"rgb(0, 255, 255)"]		#cyen
+		# colours = %q{magenta green blue yellow darkorange black white indigo saddlebrown cyan}.split
 		board = Board.new(colours)
 
 		code_breaker = CodeBreaker.new(name)		

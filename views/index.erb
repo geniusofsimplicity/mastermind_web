@@ -19,14 +19,15 @@
 		#victory-notification{
 				background: yellow;
 				height: 50px;				
-				padding: 0 25% 0 25%;
-				margin: 0 0 5px 0;
+				padding: 0 25% 0 22%;
+				margin: 0 2px 5px 2px;
+				border: 1px solid black;
 			}
 		
 		.center{			
 			margin: 15px auto;
 	  	width: 400px;
-	  	height: 700px;
+	  	height: 660px;
 	  	border: 5px solid #000066;
 	  	padding: 10px;
 	  	background-color: #6d695c;
@@ -40,9 +41,8 @@
 			-moz-border-radius: 50%;
 			-webkit-border-radius: 50%;
 			border-radius: 50%;
-			margin: 5px auto 5px auto;
-			
-		}
+			margin: 5px auto 5px auto;			
+		}		
 		.oval{
 			width: 200px;
 			height: 50px;
@@ -77,8 +77,7 @@
 		  border-collapse:collapse;		  
 		}
 		.table-row{
-			display: table-row;			 
-			height: 20px;
+			display: table-row;
 			padding: 0px;			
 		}
 		.table-cell{
@@ -98,6 +97,7 @@
 		}
 		.table-2 .table-row{
 			display: table-row;
+			height: 20px;
 		}
 		.table-2 .table-cell{
 			display: table-cell;
@@ -111,7 +111,7 @@
 			text-align: center;
 		}
 		.action-button{
-			background-color: orange;
+			background-color: orange;			
 		}
 
 		<% board.each_index do |i| %>
@@ -136,24 +136,46 @@
 			<% end %>
 		<% end %>
 
+		<% current_row = board.size %>
+
+
 		#form div{
 			display: inline;
 		}
-
-	</style>	
-
-	<script type="text/javascript">
-
-	</script>
-
-
+		.table-colours-container{
+			position: absolute;
+			margin-top: -25px;
+			/*display: none;*/
+		}		
+		.table-of-colours{
+			display: table;
+			background: grey;
+			border: 1px solid #000066;
+		}
+		.row-of-colours{
+			display: table-row;
+		}
+		.cell-of-colours{
+			display: table-cell;			
+		}
+		<% colours.each_index do |i| %>
+			<%= ".colour-#{i}{"%>
+			<%= "background: #{colours[i]};"%>
+			<%= "margin: 3px;"%>
+			
+			<%= "width: 20px;"%>
+			<%= "height: 20px;"%>
+			}
+		<% end %>
+	</style>
 </head>
-<body>
+
+<body>	
 
 	<div class="center">
 		<% if victory %>
 			<div class="oval" id="victory-notification">
-				<p>Master: "Congratulations! You have won! Do you want to start again?"</p>
+				<p>Master: "Congratulations! You have won!"</p>
 			</div>
 		<% else %>
 			<div class="oval">
@@ -167,7 +189,9 @@
 				<div class="table-row" id="table-row-12">
 					<div class="table-cell numeration">12</div>
 				 	<div class="table-cell">				 		
-				 		<div class="circle first"></div>
+				 		<div class="circle first">
+				 			<!-- <div class="showme">Here I am!</div> -->
+				 		</div>
 				 	</div>
 			    <div class="table-cell">
 			    	<div class="circle second"></div>
@@ -525,46 +549,63 @@
 			    </div>
 				</div>
 			</div>
-		</div>
-		<form name="form_move" method="post" action="/new_move">
-		<div id="form">
-			<div id="normal_text_text">
-				Your guess:<br>
-			</div>
-			<div>
-				<select name="first_colour">
-					<% colours.each do |c| %>
-					<%= "<option value='#{c}' #{board.size > 0 && board.last[0][0] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
-					<% end %>
-				</select>
-			</div>		
-			<div>			
-				<select name="second_colour">
-					<% colours.each do |c| %>
-					<%= "<option value='#{c}' #{board.size > 0 && board.last[0][1] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
-					<% end %>
-				</select>			
-			</div>		
-			<div>			
-				<select name="third_colour">
-					<% colours.each do |c| %>
-					<%= "<option value='#{c}' #{board.size > 0 && board.last[0][2] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
-					<% end %>
-				</select>			
-			</div>		
-			<div>			
-				<select name="fourth_colour">
-					<% colours.each do |c| %>
-					<%= "<option value='#{c}' #{board.size > 0 && board.last[0][3] == c ? 'selected=\'selected\'' : '' }'>#{c}</option>" %>
-					<% end %>
-				</select>			
-			</div>		
-			<div>
-				<input type='submit' onclick="return updateBoard();" value='guess' id="guess_button"/>
-			</div>
-		</div>
-	</form>	
+		</div>		
 	</div>
 
+
+
+	<script src="http://code.jquery.com/jquery.js"></script>
+	<script type="text/javascript">	
+		
+		
+			<%= "$(\"#table-row-#{board.size + 1} .circle:not(.action-button)\").on('mouseleave', function(){ " %>
+			
+				$(this).empty();
+			});
+			$(".table-row .circle:not(.action-button)").on("click", ".circle", function(){
+					var colour = $(this).css('background-color');
+					closest = $(this).parents(".circle");
+					closest.css("background-color", colour);
+				});
+
+			<%= "$(\"#table-row-#{board.size + 1} .circle:not(.action-button)\").on('mouseenter', function(){ " %>		
+				var popup = 
+					"<div class='table-colours-container'>" +
+					"<div class='table-of-colours'>" + 
+						"<div class='row-of-colours'>" +
+							<% colours.size.times do |i| %>
+								"<div class='cell-of-colours'>" +
+									<%= "\"<div class='circle colour-#{i}'></div>\"" %>
+								+ "</div>" +
+							<% end %>
+						"</div>" +
+					"</div>" +
+					"<div>";
+				var palette = $(this).append( popup );	
+			});	
+	
+			<% current_row = "#table-row-#{board.size + 1}" %>
+
+			$("<%= current_row%> .action-button").on('click', function(){
+				first_colour_back = $("<%=current_row %> .first").css("background-color")
+				second_colour_back = $("<%=current_row %> .second").css("background-color")
+				third_colour_back = $("<%=current_row %> .third").css("background-color")
+				fourth_colour_back = $("<%=current_row %> .fourth").css("background-color")
+				url = "http://localhost:4567/new_move";
+
+			var form_string =	"<form method='post' action='/new_move' style='display: none'>" +
+									"<input type='text' name='first_colour' value='"+ first_colour_back +
+									"'><input type='text' name='second_colour' value='"+ second_colour_back +
+									"'><input type='text' name='third_colour' value='"+ third_colour_back +
+									"'><input type='text' name='fourth_colour' value='"+ fourth_colour_back +
+									"'></form>";
+
+			var form = $( form_string );			
+			$(this).append(form);			
+			form.submit();
+			});
+	</script>
+
+	
 </body>
 </html>
