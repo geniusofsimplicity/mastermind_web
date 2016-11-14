@@ -38,9 +38,12 @@ post '/new_move' do
 	board = game.get_board
 	puts "code = #{game.print_code}"
 	session["game"] = game
-	victory = game.victory?	
+	victory = game.victory?
+	if victory || board.size == 12
+		code = game.get_code
+	end
 	colours = game.get_colours
-	erb :index, {locals: {board: board, colours: colours, victory: victory}}
+	erb :index, {locals: {board: board, colours: colours, victory: victory, code: code}}
 end
 
 post '/' do

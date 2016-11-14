@@ -56,6 +56,7 @@ class Mastermind
 	end
 
 	class CodeMaster
+		attr_reader :code
 		def initialize(mode)
 			case
 			when mode[:colours] then gen_code(mode[:colours])
@@ -84,11 +85,7 @@ class Mastermind
 				end
 			end
 			{bulls: bulls, cows: cows}
-		end
-
-		def print_code
-			@code.join(" ")
-		end
+		end	
 
 		private
 
@@ -185,8 +182,8 @@ class Mastermind
 		@board.board.size > 0 && @board.board.last[1][:bulls] == 4
 	end
 
-	def print_code
-		@code_master.print_code
+	def get_code
+		@code_master.code
 	end
 
 	def get_board
