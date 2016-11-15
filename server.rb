@@ -5,7 +5,7 @@ use Rack::Session::Pool, :expire_after => 2592000
 
 # enable :sessions
 
-get "/" do
+get "/*" do
 	game = Mastermind.setup_game("Pasha")
 	board = game.get_board
 	session["game"] = game 
