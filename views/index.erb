@@ -348,6 +348,39 @@
 			width: 250px;
     	float: left;
 		}
+		#code-master{
+			width: 100%;
+			height: 50px;
+			margin-left: 25px;
+		  -webkit-border-radius: 10px;
+		  border-radius: 10px;
+		  font: normal normal bold 24px/40px "Averia Sans Libre", Helvetica, sans-serif;
+		  color: rgb(255, 255, 255);
+		  text-align: center;
+		  line-height: 45px;
+		  overflow: hidden;
+		  margin-bottom: 5px;
+		  -webkit-box-shadow: 0 0 6px 3px rgba(0,0,0,0.5) ;
+			box-shadow: 0 0 6px 3px rgba(0,0,0,0.5) ;
+			text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
+			background: -webkit-linear-gradient(-90deg, rgba(252,234,187,1) 0, rgba(252,205,77,1) 50%, rgba(248,181,0,1) 51%, rgba(251,223,147,1) 100%);
+			  background: -moz-linear-gradient(180deg, rgba(252,234,187,1) 0, rgba(252,205,77,1) 50%, rgba(248,181,0,1) 51%, rgba(251,223,147,1) 100%);
+			  background: linear-gradient(180deg, rgba(252,234,187,1) 0, rgba(252,205,77,1) 50%, rgba(248,181,0,1) 51%, rgba(251,223,147,1) 100%);
+			  border: 2px solid rgba(15,79,47,1);
+		}
+		#button-give-up{
+			background: -webkit-linear-gradient(-270deg, rgba(242,0,0,1) 0, rgba(239,103,103,1) 50%, rgba(242,0,0,1) 100%);
+  background: -moz-linear-gradient(360deg, rgba(242,0,0,1) 0, rgba(239,103,103,1) 50%, rgba(242,0,0,1) 100%);
+  background: linear-gradient(360deg, rgba(242,0,0,1) 0, rgba(239,103,103,1) 50%, rgba(242,0,0,1) 100%);
+  		border: 0 none rgba(127,98,117,1);  
+  		border-bottom: 4px solid rgba(127,98,117,1);  
+		}
+		#button-give-up:hover{
+			background: -webkit-linear-gradient(-270deg, rgba(242,55,55,1) 0, rgba(242,135,135,1) 50%, rgba(242,55,55,1) 100%);
+  		background: -moz-linear-gradient(360deg, rgba(242,55,55,1) 0, rgba(242,135,135,1) 50%, rgba(242,55,55,1) 100%);
+  		background: linear-gradient(360deg, rgba(242,55,55,1) 0, rgba(242,135,135,1) 50%, rgba(242,55,55,1) 100%);
+  
+		}
 		#board-header > div:nth-child(2){
 			line-height: 50px;
 			width: 100px;
@@ -380,10 +413,8 @@
 			</div>
 		</div>				
 		<% else %>
-			<div class="oval">
-				<span>
-					Master
-				</span>								
+			<div id="code-master">				
+					CODE											
 			</div>
 		<% end %>
 	</div>
@@ -893,7 +924,6 @@
 			});
 
 			$("#button-give-up").on('click', function(){
-				alert("testing");
 				var form_string =	"<form method='post' action='/give_up' style='display: none'></form>"
 				var form = $( form_string );
 				$(this).append(form);			
@@ -901,7 +931,6 @@
 				$(this).empty();				
 			});
 			$("#button-restart").on('click', function(){
-				alert("testing");
 				var form_string =	"<form method='post' action='/restart' style='display: none'></form>"
 				var form = $( form_string );
 				$(this).append(form);			
