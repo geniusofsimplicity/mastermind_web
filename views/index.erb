@@ -418,7 +418,7 @@
 			</div>
 		<% end %>
 	</div>
-	<% if give_up %>
+	<% if give_up || victory %>
 		<div class="button" id="button-restart">
 			restart
 		</div>
@@ -460,7 +460,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-						<% if board.size == 11 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+						<% elsif board.size == 11 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 11 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -496,7 +498,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 10 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 10 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 10 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -532,7 +536,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 9 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 9 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 9 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -568,7 +574,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 8 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 8 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 8 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -604,7 +612,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 7 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 7 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 7 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -640,7 +650,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 6 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 6 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 6 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -676,7 +688,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 5 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 5 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 5 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -712,7 +726,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 4 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 4 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 4 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -748,7 +764,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 3 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 3 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 3 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -784,7 +802,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 2 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 2 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 2 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -820,7 +840,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 1 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 1 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 1 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -856,7 +878,9 @@
 			    	</div>
 			    </div>
 			    <div class="table-cell">
-			    	<% if board.size == 0 %>
+			    	<% if victory || give_up %>
+			    	<div class="action-button-pressed"></div>
+			    	<% elsif board.size == 0 %>
 			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 1 %>
 			    	<div class="action-button-disable">CHECK</div>
@@ -874,7 +898,7 @@
 	<script src="http://code.jquery.com/jquery.js"></script>
 	<script type="text/javascript">	
 		
-		
+		<% if !(victory || give_up) %>
 			<%= "$(\"#table-row-#{board.size + 1} .circle:not(.action-button)\").on('mouseleave', function(){ " %>
 				$(this).toggleClass("glowing-border");
 				$(this).empty();
@@ -901,6 +925,7 @@
 					"<div>";
 				var palette = $(this).append( popup );	
 			});	
+		<% end %>
 	
 			<% current_row = "#table-row-#{board.size + 1}" %>
 
@@ -921,6 +946,7 @@
 				var form = $( form_string );			
 				$(this).append(form);			
 				form.submit();
+				$(this).empty();
 			});
 
 			$("#button-give-up").on('click', function(){
