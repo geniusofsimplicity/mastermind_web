@@ -126,27 +126,16 @@
 			text-align: center;
 		}
 
-		.action-button {
-  display: inline-block;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  height: 40px;
-  width: 50px;
-  position: relative;
-  cursor: pointer;
-  margin-left: 15px;  
- /* top: 0;
-  left: 0;*/
-  /*padding: 10px 20px;*/
-  border: 0 none rgba(147,73,0,1);  
+		.button{
+			border: 0 none rgba(147,73,0,1);  
   border-bottom: 4px solid rgba(147,73,0,1);
   -webkit-border-radius: 7px 7px 9px 9px;
   border-radius: 7px 7px 9px 9px;
   font: normal normal bold 12px/20px "Averia Sans Libre", Helvetica, sans-serif;
   color: rgb(255, 255, 255);
-  text-align: center;  
-  line-height: 35px; 
+  text-align: center;
+  cursor: pointer;
+   
   text-transform: uppercase;
   /*-o-text-overflow: clip;
   text-overflow: clip;*/
@@ -163,9 +152,26 @@
   -webkit-box-shadow: 0 -1px 1px 0 rgba(255,255,255,0.701961) inset, 0 1px 1px 0 rgba(201,114,94,1) ;
   box-shadow: 0 -1px 1px 0 rgba(255,255,255,0.701961) inset, 0 1px 1px 0 rgba(201,114,94,1) ;
   text-shadow: 0 1px 1px rgba(0,0,0,0.498039) ;
+		}
+
+		.action-button {
+  display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 40px;
+  width: 50px;
+  line-height: 35px;
+  position: relative;
+  
+  margin-left: 15px;  
+ /* top: 0;
+  left: 0;*/
+  /*padding: 10px 20px;*/
+  
 }
 
-.action-button:hover {
+.button:hover {
   border: 0 none rgba(198,100,7,1);
   border-bottom: 4px solid rgba(198,100,7,1);
   background: -webkit-linear-gradient(-90deg, rgba(242,192,43,1) 0, rgba(237,244,22,1) 48%, rgba(229,147,48,1) 100%);
@@ -273,7 +279,7 @@
 		<% end %>
 
 		
-		<% if victory || board.size == 12 %>
+		<% if victory || board.size == 12 || give_up %>
 			<% nth_circle = %q{first second third fourth}.split %>
 			<% 4.times do |i|  %>			
 				<%= "#code .#{nth_circle[i]}{" %>
@@ -313,7 +319,7 @@
 		<% end %>
 
 		#code{
-			width: 63%;
+			width: 100%;
 			margin-left: 25px;
 		  -webkit-border-radius: 10px;
 		  border-radius: 10px;
@@ -327,35 +333,51 @@
 			  background: -moz-linear-gradient(180deg, rgba(252,234,187,1) 0, rgba(252,205,77,1) 50%, rgba(248,181,0,1) 51%, rgba(251,223,147,1) 100%);
 			  background: linear-gradient(180deg, rgba(252,234,187,1) 0, rgba(252,205,77,1) 50%, rgba(248,181,0,1) 51%, rgba(251,223,147,1) 100%);
 			  border: 2px solid rgba(149,132,244,1);
-			<% elsif !victory && board.size == 12 %>
+			<% elsif give_up || board.size == 12 %>
 				background: -webkit-linear-gradient(-90deg, rgba(0,0,0,1) 0, rgba(0,137,0,1) 69%, rgba(2,247,2,1) 100%);
 			  background: -moz-linear-gradient(180deg, rgba(0,0,0,1) 0, rgba(0,137,0,1) 69%, rgba(2,247,2,1) 100%);
 			  background: linear-gradient(180deg, rgba(0,0,0,1) 0, rgba(0,137,0,1) 69%, rgba(2,247,2,1) 100%);
 			  border: 2px solid rgba(15,79,47,1);
 		  <% end %>  
 		}
-	</style>
+		#board-header{
+			width: 100%;
+			display: flex;
+		}
+		#board-header > div:nth-child(1){
+			width: 250px;
+    	float: left;
+		}
+		#board-header > div:nth-child(2){
+			line-height: 50px;
+			width: 100px;
+			height: 50px;
+			margin-left: 50px;
+		}
+	</style>	
 </head>
 
 <body>	
 
 	<div class="center">
-		<% if victory || board.size == 12 %>
+		<div id="board-header">
+			<div>
+		<% if victory || board.size == 12 || give_up %>
 		<div class="table" id="code">
-		<div class="table-row">			
-			<div class="table-cell">				 		
-				<div class="circle first"></div>
+			<div class="table-row">			
+				<div class="table-cell">				 		
+					<div class="circle first"></div>
+				</div>
+				<div class="table-cell">
+				 	<div class="circle second"></div>
+				</div>
+				<div class="table-cell">
+				 	<div class="circle third"></div>
+				</div>
+				 <div class="table-cell">
+			  	<div class="circle fourth"></div>
+			  </div>
 			</div>
-			<div class="table-cell">
-			 	<div class="circle second"></div>
-			</div>
-			<div class="table-cell">
-			 	<div class="circle third"></div>
-			</div>
-			 <div class="table-cell">
-		  	<div class="circle fourth"></div>
-		  </div>
-		</div>
 		</div>				
 		<% else %>
 			<div class="oval">
@@ -364,6 +386,18 @@
 				</span>								
 			</div>
 		<% end %>
+	</div>
+	<% if give_up %>
+		<div class="button" id="button-restart">
+			restart
+		</div>
+	<% else %>
+		<div class="button" id="button-give-up">
+			give up
+		</div>
+	<% end %>
+	
+	</div>
 		<div id="board">
 			<div class="table">			
 				<div class="table-row" id="table-row-12">
@@ -396,7 +430,7 @@
 			    </div>
 			    <div class="table-cell">
 						<% if board.size == 11 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 11 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -432,7 +466,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 10 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 10 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -468,7 +502,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 9 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 9 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -504,7 +538,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 8 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 8 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -540,7 +574,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 7 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 7 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -576,7 +610,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 6 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 6 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -612,7 +646,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 5 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 5 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -648,7 +682,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 4 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 4 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -684,7 +718,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 3 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 3 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -720,7 +754,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 2 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 2 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -756,7 +790,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 1 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 1 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -792,7 +826,7 @@
 			    </div>
 			    <div class="table-cell">
 			    	<% if board.size == 0 %>
-			    	<div class="action-button">CHECK</div>
+			    	<div class="action-button button">CHECK</div>
 			    	<% elsif board.size < 1 %>
 			    	<div class="action-button-disable">CHECK</div>
 			    	<% else %>
@@ -853,9 +887,26 @@
 									"'><input type='text' name='fourth_colour' value='"+ fourth_colour_back +
 									"'></form>";
 
-			var form = $( form_string );			
-			$(this).append(form);			
-			form.submit();
+				var form = $( form_string );			
+				$(this).append(form);			
+				form.submit();
+			});
+
+			$("#button-give-up").on('click', function(){
+				alert("testing");
+				var form_string =	"<form method='post' action='/give_up' style='display: none'></form>"
+				var form = $( form_string );
+				$(this).append(form);			
+				form.submit();
+				$(this).empty();				
+			});
+			$("#button-restart").on('click', function(){
+				alert("testing");
+				var form_string =	"<form method='post' action='/restart' style='display: none'></form>"
+				var form = $( form_string );
+				$(this).append(form);			
+				form.submit();
+				$(this).empty();				
 			});
 	</script>
 
